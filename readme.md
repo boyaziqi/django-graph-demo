@@ -13,3 +13,6 @@ python django graph demo
 
 #### 运行效果
 ![image](https://github.com/boyaziqi/django-graph-demo/blob/master/statics/graphiql.jpg)
+
+#### 结语
+GraphQL 支持自省，方便生成文档。通过 GraphIQL，在右边就能看到目前 query。
