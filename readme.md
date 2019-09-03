@@ -12,4 +12,4 @@ python django graph demo
 - 访问 http://127.0.0.1:8000/graphq，将会打开一个 GraphIQL 窗口，可以在里面进行测试。
 
 #### 运行效果
-![image](http://)
+![image](https://github.com/boyaziqi/django-graph-demo/blob/master/statics/graphiql.jpg)
