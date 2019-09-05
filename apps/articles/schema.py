@@ -29,13 +29,12 @@ class ArticleType(DjangoObjectType):
 
 
 class Query(object):
-    category = relay.Node.Field(CategoryType)
+    category = graphene.Field(CategoryType, id=graphene.Int())
     all_categories = DjangoFilterConnectionField(CategoryType)
     article = relay.Node.Field(ArticleType)
     all_articles = DjangoFilterConnectionField(ArticleType)
 
     def resolve_category(self, info, **kwargs):
-        print('ffffffffffff')
         id = kwargs.get('id')
         return Category.objects.get(pk=id)
 
@@ -46,23 +45,26 @@ class Query(object):
         return Article.objects.select_related('category').all()
 
 
-class CategoryInput(graphene.InputObjectType):
-    name = graphene.String()
-
-
-class CreateCategoryMutation(graphene.Mutation):
+class deleteCategoryMutation(graphene.Mutation):
     class Arguments:
-        input = CategoryInput(required=True)
+        id = graphene.Int(required=True)
 
     ok = graphene.Boolean()
-    category = graphene.Field(CategoryType)
+    all_categories = DjangoFilterConnectionField(CategoryType)
 
-    def mutate(self, info, input):
+    def mutate(self, info, id):
         ok = True
-        category = Category(name=input.name)
-        category.save()
-        return CreateCategoryMutation(ok, category)
+        category = Category(id=id)
+        category.delete()
+        categories = Category.objects.all()
+        return deleteCategoryMutation(ok, categories)
+
+
+class CategoryMutation(SerializerMutation):
+    class Meta:
+        serializer_class = CategorySerializer
 
 
 class Mutation(graphene.ObjectType):
-    create_category = CreateCategoryMutation.Field()
+    delete_category = deleteCategoryMutation.Field()
+    category_cu = CategoryMutation.Field()
